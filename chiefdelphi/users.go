@@ -118,10 +118,7 @@ func GetUsers() chan User {
 		for i := 0; ; i++ {
 			page := getDirectoryPage(All, DAYS_VISITED, i)
 
-			println(i)
-
 			for _, user := range page.DirectoryItems {
-				println(user.User.Username)
 				user := GetUser(user.User.Username)
 				yield <- user
 			}
@@ -260,15 +257,14 @@ func GetUser(username string) User {
 	err := makeRequest(endpoint, &result)
 
 	if err != nil {
-		log.Printf("Bad response from Chief Delphi on %s", endpoint)
 		return User{}
 	}
 
 	teamNumber, err := strconv.Atoi(result.User.UserFields.Num1)
 
 	if err != nil {
-		log.Printf("Bad response from Chief Delphi on %s", endpoint)
-		return User{}
+		log.Printf("Bad team number from Chief Delphi on %s", endpoint)
+		return User{result.User.ID, result.User.Username, -1}
 	}
 
 	return User{result.User.ID, result.User.Username, teamNumber}

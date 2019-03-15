@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 )
@@ -36,6 +37,7 @@ func makeRequest(endpoint string, v interface{}) error {
 	response, err := http.Get(baseURL + endpoint)
 
 	if err != nil {
+		log.Printf("Bad response from Chief Delphi on %s", endpoint)
 		return err
 	}
 
@@ -46,6 +48,7 @@ func makeRequest(endpoint string, v interface{}) error {
 	data, err := ioutil.ReadAll(response.Body)
 
 	if err != nil {
+		log.Printf("Bad response from Chief Delphi on %s", endpoint)
 		return err
 	}
 
