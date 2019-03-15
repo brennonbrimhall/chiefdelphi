@@ -307,8 +307,6 @@ func GetTopicsSince(i int) chan Topic {
 		for ; i <= latestTopicID; i++ {
 			topic := GetTopic(i)
 			yield <- topic
-
-			sleep()
 		}
 
 		close(yield)

@@ -130,8 +130,6 @@ func GetUsers() chan User {
 				close(yield)
 				return
 			}
-
-			sleep()
 		}
 	}()
 

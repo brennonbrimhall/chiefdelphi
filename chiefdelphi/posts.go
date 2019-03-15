@@ -172,8 +172,6 @@ func GetPostsSince(i int) chan Post {
 		for ; i <= latestPostID; i++ {
 			post := GetPost(i)
 			yield <- post
-
-			sleep()
 		}
 
 		close(yield)
