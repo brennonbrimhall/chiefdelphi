@@ -59,9 +59,9 @@ func populatePosts(database *sql.DB) {
 func main() {
 	database := initalizeDB("./chiefdelphi.db")
 
+	defer database.Close()
+
 	populateUsers(database)
 	populateTopics(database)
 	populatePosts(database)
-
-	database.Close()
 }
