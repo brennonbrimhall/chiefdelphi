@@ -61,5 +61,5 @@ func makeRequest(endpoint string, v interface{}) error {
 
 func sleep() {
 	// For some reason, I get corrupt data if I don't sleep.
-	time.Sleep(1000 * time.Millisecond)
+	time.Sleep(500 * time.Millisecond)
 }
