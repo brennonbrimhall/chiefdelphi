@@ -295,7 +295,7 @@ func GetTopics() chan Topic {
 func GetTopicsSince(i int) chan Topic {
 	yield := make(chan Topic)
 
-	latestTopicID, err := getLatestPostID()
+	latestTopicID, err := getLatestTopicID()
 
 	if err != nil {
 		log.Print("Unable to get the latest topic ID from Chief Delphi.")
