@@ -46,13 +46,13 @@ func populateTopics(database *sql.DB) {
 }
 
 func populatePosts(database *sql.DB) {
-	statement, _ := database.Prepare("INSERT INTO posts (id, userid, topicid, timestamp, body) VALUES (?, ?, ?, ?)")
+	statement, _ := database.Prepare("INSERT INTO posts (id, userid, topicid, `timestamp`, body) VALUES (?, ?, ?, ?, ?)")
 
 	posts := chiefdelphi.GetPosts()
 
 	for post := range posts {
-		fmt.Printf("%d,%d,%s,%s\n", post.ID, post.UserID, post.Timestamp.String(), post.Body)
-		statement.Exec(post.ID, post.UserID, post.Timestamp, post.Body)
+		fmt.Printf("%d,%d,%s\n", post.ID, post.UserID, post.Timestamp.String())
+		statement.Exec(post.ID, post.UserID, post.TopicID, post.Timestamp, post.Body)
 	}
 }
 
