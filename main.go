@@ -3,8 +3,8 @@ package main
 import (
 	"chiefdelphi/chiefdelphi"
 	"database/sql"
+	"flag"
 	"fmt"
-
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -35,9 +35,12 @@ func populateUsers(database *sql.DB) {
 }
 
 func populateTopics(database *sql.DB) {
+	lastTopicID := 0
+	database.QueryRow("SELECT MAX(id) FROM topics").Scan(&lastTopicID)
+
 	statement, _ := database.Prepare("INSERT INTO topics (id, title) VALUES (?, ?)")
 
-	topics := chiefdelphi.GetTopics()
+	topics := chiefdelphi.GetTopicsSince(lastTopicID)
 
 	for topic := range topics {
 		fmt.Printf("%d,%s\n", topic.ID, topic.Title)
@@ -46,9 +49,12 @@ func populateTopics(database *sql.DB) {
 }
 
 func populatePosts(database *sql.DB) {
+	lastPostID := 0
+	database.QueryRow("SELECT MAX(id) FROM posts").Scan(&lastPostID)
+
 	statement, _ := database.Prepare("INSERT INTO posts (id, userid, topicid, `timestamp`, body) VALUES (?, ?, ?, ?, ?)")
 
-	posts := chiefdelphi.GetPosts()
+	posts := chiefdelphi.GetPostsSince(lastPostID)
 
 	for post := range posts {
 		fmt.Printf("%d,%d,%s\n", post.ID, post.UserID, post.Timestamp.String())
@@ -57,11 +63,25 @@ func populatePosts(database *sql.DB) {
 }
 
 func main() {
+	scrapeUsers := flag.Bool("users", false, "Scrape CD users")
+	scrapeTopics := flag.Bool("topics", false, "Scrape CD topics")
+	scrapePosts := flag.Bool("posts", false, "Scrape CD posts")
+
+	flag.Parse()
+
 	database := initalizeDB("./chiefdelphi.db")
 
 	defer database.Close()
 
-	populateUsers(database)
-	populateTopics(database)
-	populatePosts(database)
+	if *scrapeUsers {
+		populateUsers(database)
+	}
+
+	if *scrapeTopics {
+		populateTopics(database)
+	}
+
+	if *scrapePosts {
+		populatePosts(database)
+	}
 }
