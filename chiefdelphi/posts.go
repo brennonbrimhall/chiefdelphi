@@ -147,7 +147,7 @@ func GetPost(ID int) Post {
 	err := makeRequest(endpoint, &result)
 
 	if err != nil {
-		return Post{}
+		return Post{ID, -1, -1, time.Unix(0, 0), ""}
 	}
 
 	return Post{ID, result.UserID, result.TopicID, result.CreatedAt, result.Raw}
